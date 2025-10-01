@@ -1,0 +1,27 @@
+{
+  "212_encounter_bay": {
+    "total_mortgage_amount": "100000",
+    "pending_mortgage_amount": "10000",
+    "regular_in_payment": "regular"
+  },
+  "977_stannage_avenue": {
+    "total_mortgage_amount": "100000",
+    "pending_mortgage_amount": "0",
+    "regular_in_payment": "regular"
+  },
+  "1313_lee_street": {
+    "total_mortgage_amount": "100000",
+    "pending_mortgage_amount": "10000",
+    "regular_in_payment": "regular"
+  },
+  "2233_ashbourne_dr": {
+    "total_mortgage_amount": "100000",
+    "pending_mortgage_amount": "20000",
+    "regular_in_payment": "regular"
+  },
+  "978_stannage_avenue": {
+    "total_mortgage_amount": "100000",
+    "pending_mortgage_amount": "30000",
+    "regular_in_payment": "regular"
+  }
+}

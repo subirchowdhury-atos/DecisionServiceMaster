@@ -1,0 +1,38 @@
+{
+  "123456781": {
+    "credit_score": 1,
+    "other_data": "abc"
+  },
+  "123456782": {
+    "credit_score": 2,
+    "other_data": "abc"
+  },
+  "123456783": {
+    "credit_score": 3,
+    "other_data": "abc"
+  },
+  "123456784": {
+    "credit_score": 4,
+    "other_data": "abc"
+  },
+  "123456785": {
+    "credit_score": 5,
+    "other_data": "abc"
+  },
+  "123456786": {
+    "credit_score": 6,
+    "other_data": "abc"
+  },
+  "123456787": {
+    "credit_score": 7,
+    "other_data": "abc"
+  },
+  "123456788": {
+    "credit_score": 8,
+    "other_data": "abc"
+  },
+  "123456789": {
+    "credit_score": 9,
+    "other_data": "abc"
+  }
+}

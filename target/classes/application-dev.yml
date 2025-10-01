@@ -1,0 +1,145 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /
+spring:
+  # Development Database - postgress in Docker
+  datasource:
+    url: jdbc:postgresql://postgres:5432/decision_service_db
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: postgres
+    hikari:
+      connection-timeout: 20000
+      maximum-pool-size: 5
+      minimum-idle: 2
+  
+  
+  # JPA Configuration for Development
+  jpa:
+    hibernate:
+      ddl-auto: validate  # Validate schema on each restart
+    show-sql: true  # Show SQL queries in console
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        use_sql_comments: true
+        jdbc:
+          time_zone: UTC
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  
+  # Caching Configuration 
+  cache:
+    type: simple  # Simple in-memory cache for development
+    cache-names: decisions, applicants, addresses
+  
+  # Development Mail Configuration (MailHog or similar)
+  mail:
+    host: localhost
+    port: 1025  # MailHog default port
+    username: 
+    password: 
+    properties:
+      mail:
+        smtp:
+          auth: false
+          starttls:
+            enable: false
+          # Don't fail on mail errors in development
+        debug: true
+    default-encoding: UTF-8
+    # Continue even if mail fails
+    test-connection: false
+  
+  # Thymeleaf Development Settings
+  thymeleaf:
+    cache: false  # Disable template caching for hot reload
+    encoding: UTF-8
+    mode: HTML
+    prefix: classpath:/templates/
+    suffix: .html
+  
+  # DevTools Configuration for hot reload
+  devtools:
+    restart:
+      enabled: true
+      additional-paths: src/main/java
+      exclude: static/**,public/**
+    livereload:
+      enabled: true
+    add-properties: true
+  
+  # Jackson Configuration
+  jackson:
+    default-property-inclusion: NON_NULL
+    serialization:
+      write-dates-as-timestamps: false
+      indent-output: true  # Pretty print JSON in development
+    deserialization:
+      fail-on-unknown-properties: false
+    property-naming-strategy: SNAKE_CASE
+  
+  # Show detailed error messages 
+  web:
+    resources:
+      add-mappings: true
+
+# Application-specific Development Configuration
+app:
+  mail:
+    default-from: dev-noreply@decisionservice.local
+  
+  encryption:
+    key: dev-32-char-encryption-key-12345  # Use a development key
+  
+  decision:
+    auto-approve-threshold: 10000  # Lower threshold for testing
+    max-loan-amount: 100000
+
+# API Token for development
+api:
+  token: dev-token-12345
+
+# Actuator Configuration for Development
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"  # Expose all endpoints in development
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: always
+    env:
+      show-values: always
+
+# Development Logging Configuration
+logging:
+  level:
+    com.decisionservicemaster: DEBUG
+    org.springframework.web: DEBUG
+    org.springframework.mail: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    org.springframework.security: DEBUG
+    org.springframework.cache: DEBUG
+    org.thymeleaf: DEBUG
+    org.springframework.boot.autoconfigure: INFO
+    root: INFO
+  pattern:
+    console: "%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(%5p) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n%wEx"
+  file:
+    name: logs/decision-service-dev.log
+
+# Development-specific properties
+debug: true
+
+
+# CORS Configuration for development (if needed for frontend)
+# Uncomment if you need to allow cross-origin requests in development
+# cors:
+#   allowed-origins: http://localhost:3000,http://localhost:4200
+#   allowed-methods: GET,POST,PUT,DELETE,OPTIONS
+#   allowed-headers: "*"
+#   allow-credentials: true

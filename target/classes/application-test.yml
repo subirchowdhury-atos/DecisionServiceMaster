@@ -1,0 +1,105 @@
+server:
+  port: 0  # Random port for parallel test execution
+
+spring:
+  # Test Database - H2 in-memory
+  datasource:
+    url: jdbc:h2:mem:testdb;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: 
+  
+  # JPA Configuration for Testing
+  jpa:
+    hibernate:
+      ddl-auto: create-drop  # Recreate schema for each test
+    show-sql: false  # Keep test output clean
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        format_sql: false
+        jdbc:
+          time_zone: UTC
+    database-platform: org.hibernate.dialect.H2Dialect
+  
+  # Disable caching in tests
+  cache:
+    type: none
+  
+  # Test Mail Configuration - Don't send real emails
+  mail:
+    host: localhost
+    port: 2525
+    username: test
+    password: test
+    properties:
+      mail:
+        smtp:
+          auth: false
+          starttls:
+            enable: false
+    # Use test delivery method (stores emails in memory)
+    test-connection: false
+  
+  # Thymeleaf Test Settings
+  thymeleaf:
+    cache: false
+    check-template-location: false
+  
+  # Jackson Configuration
+  jackson:
+    default-property-inclusion: NON_NULL
+    serialization:
+      write-dates-as-timestamps: false
+    deserialization:
+      fail-on-unknown-properties: false
+    property-naming-strategy: SNAKE_CASE
+
+# Application-specific Test Configuration
+app:
+  mail:
+    default-from: test@decisionservice.test
+  
+  encryption:
+    key: test-32-char-encryption-key-test  # Test encryption key
+  
+  decision:
+    auto-approve-threshold: 5000
+    max-loan-amount: 50000
+
+# API Token for tests
+api:
+  token: test-token-12345
+
+# Actuator Configuration for Testing
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
+
+# Test Logging Configuration
+logging:
+  level:
+    com.decisionservicemaster: DEBUG
+    org.springframework.web: WARN
+    org.springframework.mail: WARN
+    org.hibernate: WARN
+    org.springframework.test: INFO
+    org.springframework.boot.test: INFO
+    root: WARN
+  pattern:
+    console: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+
+# Test-specific properties
+debug: false
+
+# Disable security for easier testing (if using Spring Security)
+# spring:
+#   security:
+#     user:
+#       name: test
+#       password: test

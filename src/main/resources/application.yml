@@ -1,0 +1,176 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /
+
+spring:
+  application:
+    name: decision-service-master
+  
+  # Database Configuration
+  datasource:
+    url: jdbc:postgresql://localhost:5432/decision_service_db
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:password}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      connection-timeout: 20000
+      maximum-pool-size: 10
+      minimum-idle: 5
+  
+  # JPA/Hibernate Configuration
+  jpa:
+    hibernate:
+      ddl-auto: validate  # use 'update' for development, 'validate' for production
+    show-sql: false  # set to true for development debugging
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        jdbc:
+          time_zone: UTC
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  
+  # Mail Configuration
+  mail:
+    host: ${MAIL_HOST:smtp.gmail.com}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME:your-email@gmail.com}
+    password: ${MAIL_PASSWORD:your-app-password}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          connectiontimeout: 5000
+          timeout: 3000
+          writetimeout: 5000
+    default-encoding: UTF-8
+  
+  # Thymeleaf Configuration
+  thymeleaf:
+    cache: false  # disable caching in development
+    encoding: UTF-8
+    mode: HTML
+    prefix: classpath:/templates/
+    suffix: .html
+  
+  # Jackson JSON Configuration
+  jackson:
+    default-property-inclusion: NON_NULL
+    serialization:
+      write-dates-as-timestamps: false
+    deserialization:
+      fail-on-unknown-properties: false
+    property-naming-strategy: SNAKE_CASE
+
+# API Token Configuration (for your ApiAuthController)
+api:
+  token: ${TOKEN:your-default-token}
+
+# Application-specific Configuration
+app:
+  mail:
+    default-from: ${DEFAULT_FROM_EMAIL:noreply@decisionservice.com}
+  
+  # Security/Encryption
+  encryption:
+    key: ${ENCRYPTION_KEY:your-32-char-encryption-key-here}
+  
+  # Business Logic Configuration
+  decision:
+    auto-approve-threshold: ${AUTO_APPROVE_THRESHOLD:50000}
+    max-loan-amount: ${MAX_LOAN_AMOUNT:1000000}
+
+# Actuator Configuration (for monitoring)
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: when-authorized
+
+# Logging Configuration
+logging:
+  level:
+    com.decisionservicemaster: INFO
+    org.springframework.mail: DEBUG  # for email debugging
+    org.hibernate.SQL: DEBUG  # for SQL debugging in development
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/decision-service.log
+
+---
+# Development Profile
+spring:
+  config:
+    activate:
+      on-profile: development
+  
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: 
+  
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+
+logging:
+  level:
+    com.decisionservicemaster: DEBUG
+    root: INFO
+
+---
+# Test Profile
+spring:
+  config:
+    activate:
+      on-profile: test
+  
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+  
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+  
+  mail:
+    host: localhost
+    port: 2525
+
+---
+# Production Profile
+spring:
+  config:
+    activate:
+      on-profile: production
+  
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+  
+  thymeleaf:
+    cache: true
+
+logging:
+  level:
+    com.decisionservicemaster: WARN
+    org.springframework.mail: WARN
+    org.hibernate: WARN

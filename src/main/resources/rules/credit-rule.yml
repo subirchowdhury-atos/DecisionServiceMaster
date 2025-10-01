@@ -1,0 +1,82 @@
+# Credit Rule Configuration - src/main/resources/rules/credit_rule.yml
+
+California:
+  enabled: true
+  credit_score_threshold: 4
+  counties:
+    Alameda:
+      enabled: true
+      credit_score_threshold: 3
+    Butte:
+      enabled: true
+    Contra Costa:
+      enabled: true
+    El Dorado:
+      enabled: true
+    Fresno:
+      enabled: true
+    Humboldt:
+      enabled: true
+    Kern:
+      enabled: true
+    Los Angeles:
+      enabled: true
+    Madera:
+      enabled: true
+    Marin:
+      enabled: true
+    Mendocino:
+      enabled: true
+    Merced:
+      enabled: true
+    Monterey:
+      enabled: true
+    Napa:
+      enabled: true
+    Nevada:
+      enabled: true
+    Orange:
+      enabled: true
+    Riverside:
+      enabled: true
+    Sacramento:
+      enabled: true
+    San Bernardino:
+      enabled: true
+    San Benito:
+      enabled: true
+    San Diego:
+      enabled: true
+    San Francisco:
+      enabled: true
+    San Joaquin:
+      enabled: true
+    San Luis Obispo:
+      enabled: true
+    San Mateo:
+      enabled: true
+    Santa Clara:
+      enabled: true
+    Santa Cruz:
+      enabled: true
+    Shasta:
+      enabled: true
+    Solano:
+      enabled: true
+    Sonoma:
+      enabled: true
+    Stanislaus:
+      enabled: true
+    Sutter:
+      enabled: true
+    Tulare:
+      enabled: true
+    Ventura:
+      enabled: true
+    Yolo:
+      enabled: true
+
+Florida:
+  enabled: true
+  credit_score_threshold: 5
+  counties: {}

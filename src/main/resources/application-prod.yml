@@ -1,0 +1,183 @@
+server:
+  port: ${PORT:8080}
+  servlet:
+    context-path: /
+  compression:
+    enabled: true
+    mime-types: application/json,application/xml,text/html,text/xml,text/plain
+  tomcat:
+    threads:
+      max: 200
+      min-spare: 10
+    accept-count: 100
+    max-connections: 10000
+
+spring:
+  # Production Database - PostgreSQL
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/decision_service_production}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      connection-timeout: 30000
+      maximum-pool-size: 20
+      minimum-idle: 10
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      connection-test-query: SELECT 1
+  
+  # JPA Configuration for Production
+  jpa:
+    hibernate:
+      ddl-auto: validate  # Never auto-create/update schema in production
+    show-sql: false  # Disable SQL logging in production
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: false
+        jdbc:
+          time_zone: UTC
+        # Enable second level cache if needed
+        cache:
+          use_second_level_cache: false
+          use_query_cache: false
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  
+  # Production Caching Configuration
+  cache:
+    type: redis  # Use Redis for distributed caching
+    redis:
+      time-to-live: 600000  # 10 minutes
+      cache-null-values: false
+  
+  # Redis Configuration
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      timeout: 2000
+      jedis:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
+          max-wait: -1ms
+  
+  # Production Mail Configuration
+  mail:
+    host: ${MAIL_HOST}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+          ssl:
+            trust: ${MAIL_HOST}
+    default-encoding: UTF-8
+  
+  # Thymeleaf Production Settings
+  thymeleaf:
+    cache: true  # Enable template caching
+    encoding: UTF-8
+    mode: HTML
+    prefix: classpath:/templates/
+    suffix: .html
+  
+  # Jackson Configuration
+  jackson:
+    default-property-inclusion: NON_NULL
+    serialization:
+      write-dates-as-timestamps: false
+      indent-output: false  # No pretty printing in production
+    deserialization:
+      fail-on-unknown-properties: false
+    property-naming-strategy: SNAKE_CASE
+  
+  # Disable DevTools in production
+  devtools:
+    restart:
+      enabled: false
+    livereload:
+      enabled: false
+
+# Application-specific Production Configuration
+app:
+  mail:
+    default-from: ${DEFAULT_FROM_EMAIL:noreply@decisionservice.com}
+  
+  encryption:
+    key: ${ENCRYPTION_KEY}  # Must be provided via environment variable
+  
+  decision:
+    auto-approve-threshold: ${AUTO_APPROVE_THRESHOLD:50000}
+    max-loan-amount: ${MAX_LOAN_AMOUNT:1000000}
+
+# API Token Configuration (from environment)
+api:
+  token: ${API_TOKEN}  # Must be provided via environment variable
+
+# Actuator Configuration for Production
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus  # Limited endpoints in production
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: when-authorized  # Hide details from unauthorized users
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+  health:
+    defaults:
+      enabled: true
+
+# Production Logging Configuration
+logging:
+  level:
+    com.decisionservicemaster: INFO
+    org.springframework.web: WARN
+    org.springframework.mail: WARN
+    org.hibernate: WARN
+    org.springframework.security: WARN
+    root: WARN
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: /var/log/decision-service/application.log
+    max-size: 10MB
+    max-history: 30
+    total-size-cap: 1GB
+
+# Security Configuration
+# Uncomment to force HTTPS
+# server:
+#   ssl:
+#     enabled: true
+#     key-store: ${SSL_KEYSTORE_PATH}
+#     key-store-password: ${SSL_KEYSTORE_PASSWORD}
+#     key-store-type: PKCS12
+
+# CORS Configuration for production (if needed)
+# cors:
+#   allowed-origins: https://yourdomain.com,https://www.yourdomain.com
+#   allowed-methods: GET,POST,PUT,DELETE,OPTIONS
+#   allowed-headers: "*"
+#   allow-credentials: true
+#   max-age: 3600
+
+# Production-specific properties
+debug: false
